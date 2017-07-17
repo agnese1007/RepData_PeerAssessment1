@@ -1,3 +1,7 @@
+# Week 2 Assignment
+A Mancini  
+17 July 2017  
+
 #Introduction 
 It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the "quantified self" movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
 
@@ -157,31 +161,3 @@ median(allstepsday$totsteps)
 ```
 ## [1] 10766.19
 ```
-we notice that meadian and mean do not change
-
-##Task 5: Are there differences in activity patterns between weekdays and weekends?
-
-###Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
-
-
-```r
-activity.data$date <- as.Date(as.character(activity.data$date))
-# add a new column containing day of week
-activity.data$weekday = weekdays(activity.data$date)
-# add a new column containing either Weekday OR Weekend
-activity.data$weekday.type <- ifelse(activity.data$weekday == "Saturday" | activity.data$weekday == "Sunday", "Weekend", "Weekday")
-# convert column to factor
-activity.data$weekday.type <- factor(activity.data$weekday.type)
-```
-
-###Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
-
-
-```r
-StepsIntweekday <- aggregate(activity.data$steps ~ activity.data$interval + activity.data$weekday.type, FUN = mean, )
-colnames(StepsIntweekday) <- c("Interval","weekday.type", "AverageSteps")
-
-ggplot(StepsIntweekday, aes(x=Interval, y = AverageSteps))+facet_grid(.~weekday.type) +labs(title = "Average steps per interval", x = "Interval", y = "Steps")+ geom_line()
-```
-
-![](PA1_template_files/figure-html/Task 5.2-1.png)<!-- -->
