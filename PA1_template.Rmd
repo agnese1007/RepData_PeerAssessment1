@@ -4,7 +4,7 @@ author: "A Mancini"
 date: "17 July 2017"
 output: 
     github_document: 
-        toc: true
+            toc: true
 ---
 
 #Introduction 
@@ -116,4 +116,21 @@ ggplot(allstepsday, aes(x = totsteps)) + geom_histogram(binwidth = 5000) +labs(t
 mean(allstepsday$totsteps)
 ####Calculate median
 median(allstepsday$totsteps)
+```
+
+##Task 5: Are there differences in activity patterns between weekdays and weekends?
+
+###Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+```{r Task 5.1}
+activity.data$weekday <- weekdays(as.Date(activity.data$date))
+activity.data$day.type <- ifelse(activity.data$weekday == "Saturday"|activity.data$weekday=="Sunday", "Weekend", "weekday")
+activity.data$day.type <- as.factor(activity.data$day.type)
+```
+
+### Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+```{r Task 5.2}
+library(ggplot2)
+activity.data.daytype <- aggregate(activity.data$steps ~ activity.data$interval + activity.data$day.type, FUN = mean)
+colnames(activity.data.daytype) <- c("interval", "day.type", "avsteps")
+ggplot(activity.data.daytype, aes(x = interval, y = avsteps))+labs(title = "Steps per interval", x = "Interval", y = "Steps")+ geom_line() + facet_grid(.~day.type)
 ```

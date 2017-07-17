@@ -20,6 +20,9 @@ A Mancini
         -   [Identify strategy](#identify-strategy)
         -   [Create a new dataset that is equal to the original dataset but with the missing data filled in](#create-a-new-dataset-that-is-equal-to-the-original-dataset-but-with-the-missing-data-filled-in)
         -   [Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?](#make-a-histogram-of-the-total-number-of-steps-taken-each-day-and-calculate-and-report-the-mean-and-median-total-number-of-steps-taken-per-day.-do-these-values-differ-from-the-estimates-from-the-first-part-of-the-assignment-what-is-the-impact-of-imputing-missing-data-on-the-estimates-of-the-total-daily-number-of-steps)
+    -   [Task 5: Are there differences in activity patterns between weekdays and weekends?](#task-5-are-there-differences-in-activity-patterns-between-weekdays-and-weekends)
+        -   [Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.](#create-a-new-factor-variable-in-the-dataset-with-two-levels---weekday-and-weekend-indicating-whether-a-given-date-is-a-weekday-or-weekend-day.)
+        -   [Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).](#make-a-panel-plot-containing-a-time-series-plot-i.e.-type-l-of-the-5-minute-interval-x-axis-and-the-average-number-of-steps-taken-averaged-across-all-weekday-days-or-weekend-days-y-axis.)
 
 Introduction
 ============
@@ -165,3 +168,25 @@ median(allstepsday$totsteps)
 ```
 
     ## [1] 10766.19
+
+Task 5: Are there differences in activity patterns between weekdays and weekends?
+---------------------------------------------------------------------------------
+
+### Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+
+``` r
+activity.data$weekday <- weekdays(as.Date(activity.data$date))
+activity.data$day.type <- ifelse(activity.data$weekday == "Saturday"|activity.data$weekday=="Sunday", "Weekend", "weekday")
+activity.data$day.type <- as.factor(activity.data$day.type)
+```
+
+### Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+
+``` r
+library(ggplot2)
+activity.data.daytype <- aggregate(activity.data$steps ~ activity.data$interval + activity.data$day.type, FUN = mean)
+colnames(activity.data.daytype) <- c("interval", "day.type", "avsteps")
+ggplot(activity.data.daytype, aes(x = interval, y = avsteps))+labs(title = "Steps per interval", x = "Interval", y = "Steps")+ geom_line() + facet_grid(.~day.type)
+```
+
+![](PA1_template_files/figure-markdown_github-ascii_identifiers/Task%205.2-1.png)
